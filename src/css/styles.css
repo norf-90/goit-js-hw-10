@@ -18,3 +18,34 @@ body {
   max-width: 320px;
   margin-bottom: 16px;
 }
+
+.country-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 0;
+  list-style: none;
+  font-family: monospace;
+  font-size: 20px;
+}
+
+.country-info {
+  font-family: monospace;
+  font-size: 20px;
+}
+
+.country-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.country-info__wrapper {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.counry-info--bold {
+  font-weight: bold;
+}
