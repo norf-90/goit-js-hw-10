@@ -4,6 +4,9 @@ import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const DEBOUNCE_DELAY = 300;
+const warningMessage =
+  'Too many matches found. Please enter a more specific name.';
+const failureMessage = 'Oops, there is no country with that name.';
 
 const refs = {
   inputEl: document.querySelector('#search-box'),
@@ -14,44 +17,44 @@ const refs = {
 refs.inputEl.addEventListener('input', debounce(onInputChange, DEBOUNCE_DELAY));
 
 function onInputChange(event) {
-  refs.countryInfo.innerHTML = '';
-  refs.countryList.innerHTML = '';
+  deleteMarkup();
+
   if (event.target.value.trim().length > 0) {
     fetchCountries(event.target.value.trim())
       .then(result => {
-        console.log(result);
-        if (result.status === 404) {
-          throw new Error(`Result status: ${result.status}`);
-        }
         if (result.length > 10) {
-          Notify.warning(
-            'Too many matches found. Please enter a more specific name.'
-          );
+          Notify.warning(warningMessage);
           return;
         }
-        createMarkup(result);
+
+        if (result.length > 1) {
+          createMarkupForFew(result);
+          return;
+        }
+        createMarkupForOne(result);
       })
       .catch(err => {
         console.error(err);
-        Notify.failure('Oops, there is no country with that name.');
+        if (err.message.includes('404')) {
+          Notify.failure(failureMessage);
+        }
       });
   }
 }
 
-function createMarkup(counries) {
-  if (counries.length > 1) {
-    const markup = counries
-      .map(country => {
-        return `<li>
-      <div class="country-item"><img class="country-flag" src="${country.flags.svg}" alt="${country.name.official} flag" height="50">
-      <p class="country-name">${country.name.official}</p>
-      </li>`;
-      })
-      .join('');
-    refs.countryList.innerHTML = markup;
-    return;
-  }
+function createMarkupForFew(counries) {
+  const markup = counries
+    .map(country => {
+      return `<li>
+        <div class="country-item"><img class="country-flag" src="${country.flags.svg}" alt="${country.name.official} flag" height="50">
+        <p class="country-name">${country.name.official}</p>
+        </li>`;
+    })
+    .join('');
+  refs.countryList.innerHTML = markup;
+}
 
+function createMarkupForOne(counries) {
   const markup = counries
     .map(country => {
       const languages = Object.values(country.languages).join(', ');
@@ -63,4 +66,9 @@ function createMarkup(counries) {
     })
     .join('');
   refs.countryInfo.innerHTML = markup;
+}
+
+function deleteMarkup() {
+  refs.countryInfo.innerHTML = '';
+  refs.countryList.innerHTML = '';
 }
