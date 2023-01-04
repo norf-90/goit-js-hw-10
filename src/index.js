@@ -19,27 +19,29 @@ refs.inputEl.addEventListener('input', debounce(onInputChange, DEBOUNCE_DELAY));
 function onInputChange(event) {
   deleteMarkup();
 
-  if (event.target.value.trim().length > 0) {
-    fetchCountries(event.target.value.trim())
-      .then(result => {
-        if (result.length > 10) {
-          Notify.warning(warningMessage);
-          return;
-        }
-
-        if (result.length > 1) {
-          createMarkupForFew(result);
-          return;
-        }
-        createMarkupForOne(result);
-      })
-      .catch(err => {
-        console.error(err);
-        if (err.message.includes('404')) {
-          Notify.failure(failureMessage);
-        }
-      });
+  if (!event.target.value.trim()) {
+    return;
   }
+
+  fetchCountries(event.target.value.trim())
+    .then(result => {
+      if (result.length > 10) {
+        Notify.warning(warningMessage);
+        return;
+      }
+
+      if (result.length > 1) {
+        createMarkupForFew(result);
+        return;
+      }
+      createMarkupForOne(result);
+    })
+    .catch(err => {
+      console.error(err);
+      if (err.message.includes('404')) {
+        Notify.failure(failureMessage);
+      }
+    });
 }
 
 function createMarkupForFew(counries) {
