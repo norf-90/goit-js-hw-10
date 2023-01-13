@@ -45,7 +45,6 @@ function onInputChange(event) {
 }
 
 function createMarkupForFew(countries) {
-  console.log(countries);
   const markup = countries
     .map(country => {
       return `<li>
@@ -58,7 +57,6 @@ function createMarkupForFew(countries) {
 }
 
 function createMarkupForOne(countries) {
-  console.log(countries);
   const markup = countries
     .map(country => {
       const languages = Object.values(country.languages).join(', ');
