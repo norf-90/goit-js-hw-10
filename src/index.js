@@ -44,8 +44,9 @@ function onInputChange(event) {
     });
 }
 
-function createMarkupForFew(counries) {
-  const markup = counries
+function createMarkupForFew(countries) {
+  console.log(countries);
+  const markup = countries
     .map(country => {
       return `<li>
         <div class="country-item"><img class="country-flag" src="${country.flags.svg}" alt="${country.name.official} flag" height="50">
@@ -56,8 +57,9 @@ function createMarkupForFew(counries) {
   refs.countryList.innerHTML = markup;
 }
 
-function createMarkupForOne(counries) {
-  const markup = counries
+function createMarkupForOne(countries) {
+  console.log(countries);
+  const markup = countries
     .map(country => {
       const languages = Object.values(country.languages).join(', ');
       return ` <div class="country-info__wrapper"><img src="${country.flags.svg}" alt="${country.name.official} flag" height="50">
